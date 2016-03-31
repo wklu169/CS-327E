@@ -58,10 +58,16 @@ def main():
         store(title, content)
         return bsObj.find("div", {"id":"bodyContent"}).findAll("a", href=re.compile("^(/wiki/)((?!:).)*$"))
 
-    links = getLinks("/wiki/Kevin_Bacon")
+    try:
+        cur.execute("DROP TABLE pages")
+    except:
+        None
+    cur.execute("CREATE TABLE pages (id BIGINT(7) NOT NULL AUTO_INCREMENT, title VARCHAR(200), content VARCHAR(10000), created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id));")
+
+    links = getLinks("/wiki/Super_Smash_Bros.")
     counter = 0
     try:
-        while len(links) > 0 and counter < 10:
+        while len(links) > 0 and counter < 3:
             newArticle = links[random.randint(0, len(links)-1)].attrs["href"]
             print(newArticle)
             links = getLinks(newArticle)
